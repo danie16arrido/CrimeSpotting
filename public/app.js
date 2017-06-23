@@ -4,6 +4,7 @@ var initialize = function () {
   var center = { lat: 41.878114, lng: -87.629798 };
   var mainMap = new MapWrapper( mapDiv, center, 14 )
   mainMap.addClickEvent();
+  mainMap.addDragMarkerEvent();
 }
 
 window.addEventListener('load', initialize);

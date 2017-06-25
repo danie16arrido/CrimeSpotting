@@ -12,6 +12,8 @@ var MapWrapper = function(container, coords, zoom){
     draggable: true,
     icon: image
   });
+  var currentTime = new Date();
+  this.monthYear = currentTime.getFullYear().toString() + "-01";
 
   this.radius = 1000;
   this.polygonRounding = 45;
@@ -48,7 +50,6 @@ MapWrapper.prototype = {
   },
 
   refresh: function( event ){
-    // console.log(event.latLng);
     if( event ){
       var position = { lat: event.latLng.lat(), lng: event.latLng.lng() }
     } else{
@@ -58,6 +59,7 @@ MapWrapper.prototype = {
     this.marker.setPosition( position )
     this.drawCircle()
     this.showMarkers( position )
+    console.log(this.monthYear);
   },
 
   showMarkers: function ( coords ) {
@@ -97,7 +99,7 @@ MapWrapper.prototype = {
       requestAddress += ":"
     }
     requestAddress = requestAddress.slice(0, -1);//delete last ":"
-    requestAddress += "&date=2013-01";
+    requestAddress += "&date=" + this.monthYear;
     // console.log("reqAddres", requestAddress, "size", this.crimeList.crimes.length);
     return requestAddress;
   },

@@ -12,8 +12,10 @@ var MapWrapper = function(container, coords, zoom){
     draggable: true,
     icon: image
   });
+
   var currentTime = new Date();
   this.monthYear = currentTime.getFullYear().toString() + "-01";
+  this.selectedCategory = "all-crime";
 
   this.radius = 1000;
   this.polygonRounding = 45;
@@ -27,8 +29,6 @@ var MapWrapper = function(container, coords, zoom){
     visible:true,
     path: this.generatePathFromCircle( this.radius )
   });
-
-
 
   this.listOfMarkers = [];
 
@@ -90,7 +90,7 @@ MapWrapper.prototype = {
   },
 
   createRequestAdress: function( polygon ) {
-    var requestAddress = "https://data.police.uk/api/crimes-street/all-crime?";
+    var requestAddress = "https://data.police.uk/api/crimes-street/"+ this.selectedCategory + "?";
     requestAddress += "poly="
     for (var i = 0; i < polygon.getPath().getLength(); i++) {
       requestAddress += polygon.getPath().getAt(i).lat();

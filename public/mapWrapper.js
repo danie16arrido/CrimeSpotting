@@ -13,6 +13,8 @@ var MapWrapper = function(container, coords, zoom){
     icon: image
   });
 
+  this.radius = 1000;
+  this.polygonRounding = 45;
   this.circle = new google.maps.Polygon({
     map:this.googleMap,
     strokeColor: '#FF0000',
@@ -21,8 +23,10 @@ var MapWrapper = function(container, coords, zoom){
     // fillColor: '#FF0000',
     // fillOpacity: 0.35,
     visible:true,
-    path:this.circlePath(this.googleMap.getCenter(),1000,22)
+    path: this.generatePathFromCircle( this.radius )
   });
+
+
 
   this.listOfMarkers = [];
 
@@ -36,23 +40,24 @@ var MapWrapper = function(container, coords, zoom){
 MapWrapper.prototype = {
 
   addClickEvent: function(){
-    google.maps.event.addListener(this.googleMap, 'click', function( event ){
-      var position = { lat: event.latLng.lat(), lng: event.latLng.lng() }
-      this.clearMarkers();
-      this.marker.setPosition( position )
-      this.drawCircle()
-      this.showMarkers( position )
-    }.bind( this ));
+    google.maps.event.addListener(this.googleMap, 'click', this.refresh.bind(this));
   },
 
   addDragMarkerEvent: function(){
-      google.maps.event.addListener(this.marker, 'dragend', function( event ){
-        var position = { lat: event.latLng.lat(), lng: event.latLng.lng() }
-        this.clearMarkers();
-        this.marker.setPosition( position )
-        this.drawCircle()
-        this.showMarkers( position )
-      }.bind(this));
+      google.maps.event.addListener(this.marker, 'dragend', this.refresh.bind(this));
+  },
+
+  refresh: function( event ){
+    // console.log(event.latLng);
+    if( event ){
+      var position = { lat: event.latLng.lat(), lng: event.latLng.lng() }
+    } else{
+      position = this.googleMap.getCenter();
+    }
+    this.clearMarkers();
+    this.marker.setPosition( position )
+    this.drawCircle()
+    this.showMarkers( position )
   },
 
   showMarkers: function ( coords ) {
@@ -71,6 +76,7 @@ MapWrapper.prototype = {
       this.addMarker( loc, crime.category );
       loc = "";
     }
+    this.updateCategories()
   },
 
   circlePath: function(center, radius, points){
@@ -97,14 +103,14 @@ MapWrapper.prototype = {
   },
 
   generatePathFromCircle: function () {
-    return this.circlePath(this.marker.position,1000,12)
+    return this.circlePath(this.marker.position,this.radius,this.polygonRounding)
   },
 
   drawCircle: function () {
     this.circle.setPath( this.generatePathFromCircle())
   },
 
-  getLatLngFromString: function ( string ) {
+  getLatLngFromString: function () {
     var latlng = string.split(/, ?/)
     return new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]));
   },
@@ -139,10 +145,21 @@ MapWrapper.prototype = {
       var center = {lat: position.coords.latitude, lng: position.coords.longitude};
       this.googleMap.setCenter(center);
       this.marker.setPosition( center );
-      // this.clearMarkers();
-      // this.marker.setPosition( position )
-      // this.drawCircle()
-      // this.showMarkers( position )
     }.bind(this));
+  },
+
+  updateCategories: function () {
+    var categoriesDiv = document.getElementById('categories');
+    categoriesDiv.innerText = "";
+    categoriesDiv.innerHtml = "";
+    var ul = document.createElement('ul');
+    ul.innerText = "Categories:"
+
+    for( var i in this.categoryCount){
+      var li = document.createElement('li');
+      li.innerText += i + ": " + this.categoryCount[i]
+      ul.appendChild(li);
+    }
+    categoriesDiv.appendChild(ul);
   }
 }

@@ -7,6 +7,19 @@ var initialize = function () {
   mainMap.addClickEvent();
   mainMap.addDragMarkerEvent();
 
+  var circleSize = document.getElementById('circle-size')
+
+  circleSize.addEventListener('change', function () {
+    var radiusKM = document.getElementById('radius-value');
+    mainMap.radius = this.value * 1000;
+    console.log("AA",mainMap.googleMap.getCenter());
+    mainMap.refresh()
+    mainMap.drawCircle();
+    radiusKM.innerText = this.value + " Km."
+
+  })
+
+
 
 }
 

@@ -5,7 +5,6 @@ var MapWrapper = function(container, coords, zoom){
     zoom: zoom,
     mapTypeId: 'terrain'
   });
-
   this.marker = new google.maps.Marker({
     position: coords,
     map: this.googleMap,
@@ -28,6 +27,9 @@ var MapWrapper = function(container, coords, zoom){
   this.listOfMarkers = [];
 
   this.crimeList = new CrimeList( null );
+
+  this.categoryCount ={};
+
   this.showMarkers(this.marker.position)
 }
 
@@ -45,7 +47,6 @@ MapWrapper.prototype = {
 
   addDragMarkerEvent: function(){
       google.maps.event.addListener(this.marker, 'dragend', function( event ){
-        console.log("first");
         var position = { lat: event.latLng.lat(), lng: event.latLng.lng() }
         this.clearMarkers();
         this.marker.setPosition( position )
@@ -54,56 +55,30 @@ MapWrapper.prototype = {
       }.bind(this));
   },
 
-  addMarkerRefresh: function () {
-    google.maps.event.addListener(this.marker, 'change', function ( event ) {
-      console.log("refresh");
-      var position = { lat: event.latLng.lat(), lng: event.latLng.lng() }
-      this.clearMarkers();
-      this.marker.setPosition( position )
-      this.drawCircle()
-      this.showMarkers( position )
-    }.bind(this))
-  },
-
-  addOnLoadEvent: function () {
-    google.maps.event.addListener(this.googleMap, 'idle', function(){
-      this.drawCircle()
-      this.showMarkers( this.marker.position )
-    }.bind(this));
-  },
-
-  drawSquare: function () {
-
-  },
-
-
   showMarkers: function ( coords ) {
     this.clearMarkers();
     this.marker.setPosition( coords )
     var requestAddress = this.createRequestAdress( this.circle );
-
     this.crimeList.url = requestAddress;
-    this.crimeList.getData();
-    console.log(this.crimeList.crimes.length);
+    this.crimeList.getData( this.updateMarkers.bind(this) );
+  },
 
+  updateMarkers: function () {
     for(var crime of this.crimeList.crimes){
       var loc = {};
       loc['lat'] = parseFloat(crime.location.latitude);
       loc['lng'] = parseFloat(crime.location.longitude);
-      this.addMarker( loc );
+      this.addMarker( loc, crime.category );
       loc = "";
     }
-
   },
 
-
   circlePath: function(center, radius, points){
-    var a=[],p=360/points,d=0;
+    var newPolygon=[],p=360/points,d=0;
     for(var i=0;i<points;++i,d+=p){
-        a.push(google.maps.geometry.spherical.computeOffset(center,radius,d));
+        newPolygon.push(google.maps.geometry.spherical.computeOffset(center,radius,d));
     }
-    return a;
-
+    return newPolygon;
   },
 
   createRequestAdress: function( polygon ) {
@@ -117,7 +92,7 @@ MapWrapper.prototype = {
     }
     requestAddress = requestAddress.slice(0, -1);//delete last ":"
     requestAddress += "&date=2013-01";
-    console.log("reqAddres", requestAddress, "size", this.crimeList.crimes.length);
+    // console.log("reqAddres", requestAddress, "size", this.crimeList.crimes.length);
     return requestAddress;
   },
 
@@ -134,16 +109,8 @@ MapWrapper.prototype = {
     return new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]));
   },
 
-  populateCrime: function(){
-    var coords = "";
-    for( var crime of this.crimeList.crimes){
-      coords += crime.location.latitude + "," + crime.location.longitude;
-      this.addMarker( this.getLatLngFromString( coords ) );
-      coords = "";
-    }
-  },
-
-  addMarker: function( coords ) {
+  addMarker: function( coords, category ){
+    this.addToCategoryCount( category );
     var newMarker = new google.maps.Marker({
       position: coords,
       map: this.googleMap
@@ -151,13 +118,31 @@ MapWrapper.prototype = {
     this.listOfMarkers.push( newMarker );
   },
 
+  addToCategoryCount: function ( category ) {
+    if(this.categoryCount[category] != null){
+      this.categoryCount[category] +=1;
+    }else{
+      this.categoryCount[category] = 1;
+    }
+  },
+
   clearMarkers: function() {
     for(var mark of this.listOfMarkers){
       mark.setMap(null);
     }
     this.listOfMarkers = [];
-    // console.log("lenght",this.markers.lenght);
+    this.categoryCount = {};
+  },
+
+  geoLocate: function(){
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var center = {lat: position.coords.latitude, lng: position.coords.longitude};
+      this.googleMap.setCenter(center);
+      this.marker.setPosition( center );
+      // this.clearMarkers();
+      // this.marker.setPosition( position )
+      // this.drawCircle()
+      // this.showMarkers( position )
+    }.bind(this));
   }
-
-
 }

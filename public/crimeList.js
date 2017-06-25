@@ -6,18 +6,18 @@ var CrimeList = function ( url ) {
 
 CrimeList.prototype = {
 
-  getData: function () {
+  getData: function ( callback ) {
     var request = new XMLHttpRequest();
     request.open('GET', this.url);
-
-    request.addEventListener('load', function () {
-      if (request.status !== 200) return;
+    request.send();
+    request.onreadystatechange = function () {
+      if(request.readyState < 4){
+      } else if( request.readyState === 4 && request.status === 200 ) {
         var jsonString = request.responseText;
         var crimes = JSON.parse(jsonString);
         this.crimes = crimes;
-        // this.onUpdate( crimes );
-    }.bind(this));
-
-    request.send();
+        callback();
+      }
+    }.bind( this )
   }
 }

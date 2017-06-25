@@ -10,23 +10,53 @@
     <script src='/crimeList.js'></script></head>
     <script src='app.js'></script></head>
 <body>
-
+  <div> <h3>CrimeSpotting   <img height="28" src="https://www.police.uk/static/img/favicon.ico" alt=""></h3> </div>
   <div id="main-map"></div>
-
-  <div id="categories">cat</div>
+  <!-- <div class="categoryHeader">Categories:</div>
   <div id="categories">
+  </div>
+  <div id="categories1">
     <input id="circle-size" value=1 type="range"  min="1" max="5" />
     <span id="radius-value">1 Km.</span>
   </div>
   <div>
-    <p>Click the button to get the date of the date field.</p>
+    <p>Click the button to set the month.</p>
     <input type="month" id="myDate" value="2014-02-09">
     <button id="btnMyDate">Set it</button>
     <span id="currentYearMonth"></span>
   </div>
   <select id="select-category">
       <option value="">Please select a category</option>
-    </select>
+    </select> -->
+
+<!-- demo only delete below uncomment above -->
+
+  <table width=100%>
+  <tr>
+    <th>
+      <div class="categoryHeader">Categories:</div>
+      <div id="categories">
+      </div>
+    </th>
+    <th>
+      <div id="categories1">
+        <input id="circle-size" value=1 type="range"  min="1" max="5" />
+        <span id="radius-value">1 Km.</span>
+      </div>
+      <div>
+        <p>Click the button to set the month.</p>
+        <input type="month" id="myDate" value="2014-02-09">
+        <button id="btnMyDate">Set it</button>
+        <span id="currentYearMonth"></span>
+      </div>
+      <select id="select-category">
+          <option value="">Please select a category</option>
+        </select>
+    </th>
+  </tr>
+</table>
+
+
 </body>
 
 </html>

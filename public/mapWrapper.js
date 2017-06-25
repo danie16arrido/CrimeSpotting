@@ -155,7 +155,6 @@ MapWrapper.prototype = {
     categoriesDiv.innerText = "";
     categoriesDiv.innerHtml = "";
     var ul = document.createElement('ul');
-    ul.innerText = "Categories:"
 
     for( var i in this.categoryCount){
       var li = document.createElement('li');

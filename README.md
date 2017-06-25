@@ -1,4 +1,6 @@
-## CrimeSpotting
+![UML Diagram](https://github.com/danie16arrido/CrimeSpotting/blob/master/Screen%20Shot%202017-06-25%20at%2021.51.01.png)
+
+## CrimeSpottinghttps
 
 An app to track crimes within a choosen area and filter it by data and type of crime.
 

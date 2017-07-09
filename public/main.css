@@ -1,9 +1,16 @@
+:root {
+  --color-one: #05668D;
+  --color-two: #427AA1;
+  --color-three: #EBF2FA;
+  --color-four: #679436;
+  --color-five: #A5BE00;
 
+}
 
 body {
   font-family: helvetica;
-  background-color: lightgray;
-  width: 70%;
+  background-color: var( --color-three);
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -11,10 +18,15 @@ body {
 
 #main-map {
   width: 100%;
-  height: 600px;;
-  border: 1px dashed black;
+  height: 400px;;
+  border: 1px dashed var(--color-four);
 }
 
+#header-text {
+  color: var( --color-one);
+  padding-bottom: 0px;
+
+}
 
 ul {
   text-align: left;
@@ -33,9 +45,16 @@ select {
   margin: 30px;
   padding-left: 25px;
   padding-right: 25px;
+  padding-top: 5px;
+  padding-bottom:5px;
   font-size: 1em;
-  color: orange;
+  color: var( --color-five);
 
+}
+
+table {
+  width: 100%;
+  padding: 0px 0px 20px 105px;
 }
 
 p {
@@ -52,14 +71,16 @@ button {
 }
 
 #categories {
-  font-size: 1em;
+  font-size: 14px;
+  /*color: var( --color-five);*/
 }
 
 .categoryHeader {
   text-align: left;
   font-size: 2em;
-  color: blue;
+  color: var( --color-four);
   padding-top: 20px;
+  padding-left: 20px;
 }
 
 /*css tricks*/

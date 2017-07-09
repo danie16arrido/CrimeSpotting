@@ -158,9 +158,14 @@ MapWrapper.prototype = {
 
     for( var i in this.categoryCount){
       var li = document.createElement('li');
-      li.innerText += i + ": " + this.categoryCount[i]
+      li.innerText += this.capitalizeFirstLetter(i) + ": " + this.categoryCount[i]
       ul.appendChild(li);
     }
     categoriesDiv.appendChild(ul);
+  },
+
+  capitalizeFirstLetter:  function(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
+
 }
